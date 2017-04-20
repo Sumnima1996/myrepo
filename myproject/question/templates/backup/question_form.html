@@ -1,0 +1,98 @@
+
+{% load staticfiles %}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Bits Project{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/bootcamp.css' %}?v=1" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/bootcamp.js' %}"></script>
+    <link href="{% static 'css/questions.css' %}" rel="stylesheet">
+     <link href="{% static 'css/notifications.css' %}" rel="stylesheet">
+    
+  </head>
+  
+  
+
+
+
+<form method="POST" action="ans/">
+{% csrf_token %}
+
+{{ form.as_p }}
+<button type="submit">Post Answer</button>
+    
+</form>
+
+<div class="row question" question-id="{{ question.id }}">
+    {% csrf_token %}
+    <div class="col-md-1 options">
+      {% if user in question.get_favoriters %}
+        <span class="glyphicon glyphicon-star  favorite favorited" title="Click to mark this question as favorite; click again to toggle"></span>
+      {% else %}
+        <span class="glyphicon glyphicon-star-empty favorite" title="Click to mark this question as favorite; click again to toggle"></span>
+      {% endif %}
+      <span class="favorite-count">{{ question.favorites }}</span>
+    </div>
+    <hr>
+Question:<b>{{question.title}}</b></br>
+Question asked by:<i>{{ question.user }}</i></br>
+Description:<p>{{ question.description }}</p></br>
+tags:{{ question.tag }}</br>
+<hr>
+{% for answer in question.get_answers %}
+<h3>{{answer.user}}</h3>
+{{answer.description }}</br>
+{{answer.vote}}</br>
+{% endfor %}
+</div>
+</br>
+<h4 class="page-header">Answers</h4>
+  <div class="answers">
+    {% for answer in question.get_answers %}
+      {% include 'questions/partial_answer.html' with question=question answer=answer %}
+    {% endfor %}
+  </div>
+
+
+
+<ul class="pagination">
+  {% if paginator.has_previous %}
+    <li><a href="?page={{ paginator.previous_page_number }}">&laquo;</a></li>
+  {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+  {% endif %}
+  {% for i in paginator.paginator.page_range %}
+    {% if paginator.number == i %}
+      <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+    {% else %}
+      <li><a href="?page={{ i }}">{{ i }}</a></li>
+    {% endif %}
+  {% endfor %}
+  {% if paginator.has_next %}
+    <li><a href="?page={{ paginator.next_page_number }}">&raquo;</a></li>
+  {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+  {% endif %}
+</ul>
+
+
+
+  <script src="{% static 'js/questions.js' %}"></script>
+ <script src="{% static 'js/notifications.js' %}"></script>
+   
+   
+    <script src="{% static 'js/ga.js' %}"></script>
+
+
+
+

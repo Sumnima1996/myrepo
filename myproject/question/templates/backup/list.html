@@ -1,0 +1,24 @@
+
+
+{% for questions in question %}
+<!-- each questions is a question model objects -->
+
+{{ questions.user }}
+{{ questions.title }}
+{{ questions.description }}
+
+{% endfor %}
+
+<div class ="pagination">
+<span class="step-links">
+{% if question.has_previous %}
+<a href="?page={{ question.previous_page_number }}">previous</a>
+{% endif %}
+<span class="current">
+Page {{ question.number }} of {{ question.paginator.num_pages }}.
+</span>
+{% if contact.has_next %}
+<a href="?page={{ question.next_page_number }}">next</a>
+{% endif %}
+</span>
+</div>
