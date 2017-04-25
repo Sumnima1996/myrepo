@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Q
 
 from django.http import HttpResponse,HttpResponseForbidden
 from .decorators import ajax_required
@@ -9,16 +10,31 @@ from .models import Question, Answer, Tag
 from .forms import QuestionForm, AnswerForm
 
 
-def _question(request, question, active):
-	paginator = Paginator(question, 10)
+def _questions(request, questions, active):
+	paginator = Paginator(questions, 10)
 	page = request.GET.get('page')
 	try:
-		question = paginator.page(page)
+		questions = paginator.page(page)
 	except PageNotAnInteger:
-		question = paginator.page(1)
+		questions = paginator.page(1)
 	except EmptyPage:
-		question = paginator.page(paginator.num_pages)
-		return render(request, 'questions/question.html', {'question': question,'active': active})
+		questions = paginator.page(paginator.num_pages)
+	return render(request, 'questions/questions.html', {'questions': questions,'active': active})
+
+def questions(request):
+	return unanswered(request)
+
+def answered(request):
+	questions = Question.get_answered()
+	return _questions(request, questions, 'answered')
+
+def unanswered(request):
+	questions = Question.get_unanswered()
+	return _questions(request, questions, 'unanswered')
+
+def all(request):
+	questions = Question.objects.all()
+	return _questions(request, questions, 'all')
 
 
 def askQuestion(request):
@@ -71,7 +87,7 @@ def answerAccept(request):
 	answer = Answer.objects.get(pk=answer_id)
 	user=request.user
 
-	if answer.question==user:
+	if answer.question.user==user:
 		answer.accept()
 		return HttpResponse()
 	else:
@@ -106,3 +122,4 @@ def vote(request):
 		activity = Activity(activity_type=vote, user=user, answer=answer_id)
 		activity.save()
 	return HttpResponse(answer.calculate_votes())
+

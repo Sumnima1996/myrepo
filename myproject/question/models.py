@@ -38,8 +38,13 @@ class Question(models.Model):
 	def get_accepted_answer(self):
 		return Answer.objects.get(question=self, is_accepted=True)
 
+	@staticmethod
 	def get_answered():
 		return Question.objects.filter(has_accepted_answer=True)
+
+	@staticmethod
+	def get_unanswered():
+		return Question.objects.filter(has_accepted_answer=False)
 
 	def get_answers(self):
 		return Answer.objects.filter(question=self)

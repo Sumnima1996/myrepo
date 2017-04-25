@@ -1,5 +1,4 @@
 
-{% extends 'base.html' %}
 {% load staticfiles %}
 {% load i18n %}
 
@@ -7,7 +6,10 @@
 
 {% block head %}
   <link href="{% static 'css/questions.css' %}" rel="stylesheet">
-  <script src="{% static 'js/questions.js' %}"></script>
+  
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <link href="{% static 'css/bootcamp.css' %}?v=1" rel="stylesheet">
 {% endblock head %}
 
 {% block main %}
@@ -26,18 +28,26 @@
       <span class="favorite-count">{{ question.favorites }}</span>
     </div>
     
+
+    
   <h4 class="page-header">Answers</h4>
   <div class="answers">
     {% for answer in question.get_answers %}
       {% include 'questions/partial_answer.html' with question=question answer=answer %}
     {% endfor %}
     <h4>Your Answer</h4>
-    <form action="{% url 'answer' %}" method="post" role="form">
+    <form action="{% url 'ans' %}" method="post" role="form">
       {% csrf_token %}
-      {{ form.question }}
+      {{ form }}
       <div class="form-group">
         <button type="submit" class="btn btn-primary">{% trans "Post Your Answer"%}</button>
       </div>
     </form>
   </div>
+
+  
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/bootcamp.js' %}"></script>
+    <script src="{% static 'js/questions.js' %}"></script>
+ <script src="{% static 'js/ga.js' %}"></script>
 {% endblock main %}

@@ -6,7 +6,7 @@ $(function () {
   
 // accept 
 
-  $(".accept").click(function () {
+$(".accept").click(function () {
     var span = $(this);
     var question = $(".question").attr("question-id");
     var answer = $(this).closest(".answer").attr("answer-id");
@@ -63,6 +63,7 @@ $(function () {
     });
   });
 
+ 
   $(".favorite").click(function () {
     var span = $(this);
     var question = $(this).closest(".question").attr("question-id");
