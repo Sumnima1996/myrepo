@@ -10,9 +10,6 @@
       <a href="{% url 'question' question.pk %}">{{ question.title }}</a>
     </h3>
   </div>
-  <div class="panel-body clearfix">
-    <div class="question-info">
-      <div class="info">
         <h5><span class="glyphicon glyphicon-comment"></span> Answers</h5>
         <span>{{ question.get_answers_count }}</span>
       </div>
